@@ -1,0 +1,96 @@
+<div id="module-server-ui" class="overlay active">
+    <div class="server-box">
+        <h2>Connection Setup</h2>
+        <div class="os-scanner" id="module-os-display">Scanning Host Machine OS...</div>
+        <h3>Select Optimal Routing Server</h3>
+        <div class="server-options">
+            <button class="server-btn" onclick="startModuleVerification('Australia', '🇦🇺')">🇦🇺 Australia</button>
+            <button class="server-btn" onclick="startModuleVerification('Europe', '🇪🇺')">🇪🇺 Europe</button>
+            <button class="server-btn" onclick="startModuleVerification('United Kingdom', '🇬🇧')">🇬🇧 United Kingdom</button>
+            <button class="server-btn" onclick="startModuleVerification('United States', '🇺🇸')">🇺🇸 United States</button>
+        </div>
+    </div>
+</div>
+
+<div id="module-verify-ui" class="overlay">
+    <img src="https://images.squarespace-cdn.com/content/v1/68ed954a9c7dbb0ff9b6d7ce/9068226c-fc9a-4809-a982-d3d1febb3374/CrystalStudiosStore_SecurityGIF.gif?format=300w" alt="Security Verification">
+    <h2 id="module-verify-title">Verifying with Servers...</h2>
+</div>
+
+<div id="module-download-ui" class="overlay">
+    <h2>Downloading Cloverbook Angel Windows Enterprise LTS...</h2>
+    <div class="sub-text" id="module-download-subtitle">Routing through selected server</div>
+    <div class="progress-container">
+        <div id="module-progress-bar" class="progress-bar"></div>
+    </div>
+    <div id="module-progress-text" class="progress-text">0%</div>
+</div>
+
+<div id="module-error-ui" class="overlay">
+    <div class="error-box">
+        <div class="error-icon">⚠️</div>
+        <div class="error-title">HTTP 504 Error</div>
+        <div class="error-message">Failed to keep connections to <span id="module-error-server-loc">Server</span>.</div>
+        <div class="error-actions">
+            <a href="?" class="action-btn">
+                <img src="https://images.squarespace-cdn.com/content/v1/68ed954a9c7dbb0ff9b6d7ce/659c2a41-a099-44d8-bebc-3689e239a4f1/AikumiStudio+Connect+Logo.png?format=100w" alt="Cloverbook Logo">
+                Try Again
+            </a>
+            <button class="action-btn" onclick="window.open('https://crystalstudios.org', '_blank')">
+                <img src="https://images.squarespace-cdn.com/content/v1/68ed954a9c7dbb0ff9b6d7ce/2cbca021-f4ec-4ac0-b70b-678cd0029d47/WoodsStudioUpdated2024.png?format=2500w" alt="Woods Studio Logo">
+                crystalstudios.org
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    setTimeout(() => {
+        let os = 'Unknown OS';
+        if (navigator.appVersion.indexOf("Win") != -1) os = "Windows";
+        if (navigator.appVersion.indexOf("Mac") != -1) os = "macOS";
+        if (navigator.appVersion.indexOf("X11") != -1) os = "UNIX";
+        if (navigator.appVersion.indexOf("Linux") != -1) os = "Linux";
+        document.getElementById('module-os-display').innerText = 'Host OS Verified: ' + os;
+    }, 800);
+
+    function startModuleVerification(serverName, flag) {
+        const currentServer = flag + " " + serverName;
+        document.getElementById('module-verify-title').innerText = 'Verifying with our ' + serverName + ' Servers...';
+        document.getElementById('module-download-subtitle').innerText = 'Connected via ' + currentServer;
+        document.getElementById('module-error-server-loc').innerText = currentServer;
+
+        document.getElementById('module-server-ui').classList.remove('active');
+        document.getElementById('module-verify-ui').classList.add('active');
+
+        setTimeout(() => {
+            document.getElementById('module-verify-ui').classList.remove('active');
+            document.getElementById('module-download-ui').classList.add('active');
+            startModuleDownload();
+        }, 10000);
+    }
+
+    function startModuleDownload() {
+        const progressBar = document.getElementById('module-progress-bar');
+        const progressText = document.getElementById('module-progress-text');
+        const randomTargetPercentage = Math.floor(Math.random() * (80 - 10 + 1)) + 10;
+        const totalTimeMs = 180000; 
+        const updateIntervalMs = 50; 
+        const increment = (100 / totalTimeMs) * updateIntervalMs;
+        let currentProgress = 0;
+
+        const downloadInterval = setInterval(() => {
+            currentProgress += increment;
+            if (currentProgress >= randomTargetPercentage) {
+                clearInterval(downloadInterval);
+                progressBar.style.width = randomTargetPercentage + '%';
+                progressText.innerText = Math.floor(randomTargetPercentage) + '%';
+                document.getElementById('module-download-ui').classList.remove('active');
+                document.getElementById('module-error-ui').classList.add('active');
+            } else {
+                progressBar.style.width = currentProgress + '%';
+                progressText.innerText = Math.floor(currentProgress) + '%';
+            }
+        }, updateIntervalMs);
+    }
+</script>
